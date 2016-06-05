@@ -17,11 +17,39 @@ int main(int argc, char* argv[])
     int secondaryWindowSize = 10;
     float gaussSigma = 1;
     int gaussRadius = 5;
+    char defaultSettings = 'c';
+    bool invert = false;
 
     if (argc < 2)
     {
         return 0;
     }
+
+    if (argc == 3)
+    {
+        defaultSettings = argv[2][0];
+    }
+    else
+    {
+        std::cout << "Default settings or custom settings (d/c): ";
+        std::cin >> defaultSettings;
+    }
+
+    if (defaultSettings == 'c')
+    {
+        std::cout << "Choose the settings to use:" << std::endl;
+        std::cout << "Primary Window Size for binarization (default = " << primaryWindowSize << "): ";
+        std::cin >> primaryWindowSize;
+        std::cout << "Secondary Window Size for binarization (default = " << secondaryWindowSize << "): ";
+        std::cin >> secondaryWindowSize;
+        std::cout << "Invert image (default = " << invert << "): ";
+        std::cin >> invert;
+        std::cout << "Convolution Filter Gauss Sigma (default = " << gaussSigma << ".0): ";
+        std::cin >> gaussSigma;
+        std::cout << "Convolution Filter Gauss Radius (default = " << gaussRadius << "): ";
+        std::cin >> gaussRadius;
+    }
+    std::cout << "Processing image (this may take several time)..." << std::endl;
 
     Image* img;
     img = readFile(argv[1]);
@@ -31,8 +59,13 @@ int main(int argc, char* argv[])
     }
 
     Image* im2 = new Image(img->width, img->height);
-    invertImage(img);
-    convertToGrayscaleImage(img);
+
+    if (invert == true)
+    {
+        invertImage(img);
+    }
+
+    convertToGrayscaleImage(img, true);
 
     auto gauss1D = calculate1DGaussianKernel(gaussRadius, gaussSigma);
     Image* imgCon = convolutionFilter(img, gauss1D, 1, gaussRadius);

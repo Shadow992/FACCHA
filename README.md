@@ -8,3 +8,9 @@ FACCHA is not optimized for any particular cpatcha type and is developed with th
 ### How to use it?
 Just download the latest *.zip file (only for windows) and Drag & Drop the captcha to analyze on it (or alternative execute the software via cmd).
 If you are using Linux you have to recompile it, however there is an (untested) makefile available in "src" folder.
+
+
+### Required Libs:
+- libJPEG
+- libPNG
+- libZLib (only used for libPNG)
