@@ -1,0 +1,5 @@
+BasedOnStyle: WebKit
+AlignTrailingComments: true
+BreakBeforeBraces: Allman
+NamespaceIndentation: All
+ColumnLimit: 120

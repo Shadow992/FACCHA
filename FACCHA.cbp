@@ -31,7 +31,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../ObjectDetectionFramework/include" />
+			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add library="E:\Program Files (x86)\CodeBlocks\MinGW\lib\libjpeg-turbo\libjpeg.a" />
