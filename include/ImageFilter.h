@@ -1,9 +1,9 @@
 #ifndef IMAGEFILTER_H
 #define IMAGEFILTER_H
 
-#include <vector>
 #include "ImageFramework.h"
 #include <math.h>
+#include <vector>
 
 namespace ImageFramework
 {

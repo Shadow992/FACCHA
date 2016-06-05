@@ -1,15 +1,14 @@
 #include "PartRecognizer.h"
 
-
 PartRecognizer::PartRecognizer()
 {
-    //ctor
+    // ctor
 }
 
 PartRecognizer::~PartRecognizer()
 {
-    //dtor
-    for(unsigned int i=0;i<parts.size();i++)
+    // dtor
+    for (unsigned int i = 0; i < parts.size(); i++)
     {
         delete parts[i];
     }
@@ -17,8 +16,8 @@ PartRecognizer::~PartRecognizer()
 
 void PartRecognizer::addPartTemplate(const std::string& fileName, int scaling)
 {
-    PartTemplate* temp=new PartTemplate;
-    if(temp->readTemplate(fileName,50,scaling) == true)
+    PartTemplate* temp = new PartTemplate;
+    if (temp->readTemplate(fileName, 50, scaling) == true)
     {
         parts.push_back(temp);
     }
@@ -26,40 +25,42 @@ void PartRecognizer::addPartTemplate(const std::string& fileName, int scaling)
 
 void PartRecognizer::addPartTemplate(const std::vector<std::string>& fileNames, int scaling)
 {
-    PartTemplate* temp=new PartTemplate;
-    bool success=false;
+    PartTemplate* temp = new PartTemplate;
+    bool success = false;
 
-    for(unsigned int i=0;i<fileNames.size();i++)
+    for (unsigned int i = 0; i < fileNames.size(); i++)
     {
-        if(temp->readTemplate(fileNames[i],50,scaling) == true)
+        if (temp->readTemplate(fileNames[i], 50, scaling) == true)
         {
-            success=true;
+            success = true;
         }
     }
 
-    if(success==true)
+    if (success == true)
     {
-       parts.push_back(temp);
+        parts.push_back(temp);
     }
 }
 
-int PartRecognizer::getBestMatchingPart(DistanceTransformation& distanceTransformedImg, int& bestScaling, float& bestScore, int x, int y, int width, int height, int threshold)
+int PartRecognizer::getBestMatchingPart(DistanceTransformation& distanceTransformedImg, int& bestScaling,
+    float& bestScore, int x, int y, int width, int height, int threshold)
 {
     int scaling;
-    int bestIdx=-1;
-    float maxDistanceOnePoint=threshold*4;
+    int bestIdx = -1;
+    float maxDistanceOnePoint = threshold * 4;
 
-    bestScore=threshold;
-    bestScaling=0;
+    bestScore = threshold;
+    bestScaling = 0;
 
-    for(unsigned int i=0;i<parts.size();i++)
+    for (unsigned int i = 0; i < parts.size(); i++)
     {
-        const float currScore=parts[i]->calculateChamferDistance(distanceTransformedImg, scaling, x, y, width, height,maxDistanceOnePoint);
-        if(bestScore > currScore)
+        const float currScore = parts[i]->calculateChamferDistance(
+            distanceTransformedImg, scaling, x, y, width, height, maxDistanceOnePoint);
+        if (bestScore > currScore)
         {
-            bestScore=currScore;
-            bestScaling=scaling;
-            bestIdx=i;
+            bestScore = currScore;
+            bestScaling = scaling;
+            bestIdx = i;
         }
     }
 
