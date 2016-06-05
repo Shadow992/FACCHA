@@ -2,6 +2,11 @@
 #include <chrono>
 #include "ImageFramework.h"
 
+// Required Libs:
+//  libJPEG
+//  libPNG
+//  libZLib (only used for libPNG)
+
 using namespace ImageFramework;
 
 int main(int argc, char *argv[])
