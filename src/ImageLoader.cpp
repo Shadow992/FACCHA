@@ -1,5 +1,7 @@
 #include "ImageLoader.h"
 
+#include <cassert>
+
 Image* ImageFramework::readAndParseJPEGFile(const std::string& fileName)
 {
     int channels;                       //  3 =>RGB   4 =>RGBA
@@ -327,6 +329,7 @@ Image* ImageFramework::parseBMPFile(char* memblock, unsigned int size)
 void ImageFramework::parseBMPData(Image* img, unsigned char* currData, int bmpWidth, int bmpHeight,
     unsigned int totalSize, bool bottomUpImage, int bmpType)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
     unsigned int idx = 0;
     int x = 0;

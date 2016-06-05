@@ -1,8 +1,11 @@
 #include "ImageSearch.h"
 
+#include <cassert>
+
 Pixel* ImageFramework::searchForImage(
     Image* img, int startX, int startY, const Image* searchImage, unsigned char variance)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
     const Image& searchImageRef = *searchImage;
 
@@ -44,6 +47,7 @@ Pixel* ImageFramework::searchForImage(
 
 bool ImageFramework::equalsImage(Image* img, int x, int y, const Image* searchImage, unsigned char variance)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
     const Image& searchImageRef = *searchImage;
 
@@ -66,6 +70,7 @@ bool ImageFramework::equalsImage(Image* img, int x, int y, const Image* searchIm
 Pixel* ImageFramework::searchForImageNextToPosition(
     Image* img, int x, int y, const Image* searchImage, unsigned char variance)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     for (int radius = 0;; radius++)
@@ -129,6 +134,7 @@ Pixel* ImageFramework::searchForPixel(
 Pixel* ImageFramework::searchForPixel(Image* img, int startX, int startY, unsigned char red, unsigned char green,
     unsigned char blue, unsigned char variance)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     for (int y = 0; y < imgRef.height; y++)
@@ -153,6 +159,7 @@ Pixel* ImageFramework::searchPixelNextToPosition(
 Pixel* ImageFramework::searchPixelNextToPosition(
     Image* img, int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char variance)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     for (int radius = 0;; radius++)
@@ -228,6 +235,8 @@ float ImageFramework::checkHistogramDifferences(
 float ImageFramework::findSimilarImageHillClimbing(Image* img, int startX, int startY, int w, int h, Image* checkImage,
     int accuracy, float overlap, int& bestX, int& bestY)
 {
+    assert(img != nullptr);
+    assert(checkImage != nullptr);
     Image& imgRef = *img;
     Image& checkImageRef = *checkImage;
 
@@ -277,6 +286,7 @@ float ImageFramework::findSimilarImageHillClimbing(Image* img, int startX, int s
 void ImageFramework::findBetterSolution(Image* img, std::vector<float>& histogramSearch, int x, int y, int w, int h,
     Image* checkImage, int accuracy, int& bestX, int& bestY, float& fitness)
 {
+    assert(checkImage != nullptr);
     Image& imgRef = *img;
     Image& checkImageRef = *checkImage;
 

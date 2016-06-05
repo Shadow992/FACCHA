@@ -1,7 +1,10 @@
 #include "ImageSaver.h"
 
+#include <cassert>
+
 int ImageFramework::saveAsPNG(Image* img, const std::string& fileName)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     FILE* fp;
@@ -68,6 +71,7 @@ int ImageFramework::saveAsPNG(Image* img, const std::string& fileName)
 
 void ImageFramework::saveAsBMP(Image* img, const std::string& fileName)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
     std::ofstream bmpFile;
     bmpFile.open(fileName, std::ios::binary | std::ios::out | std::ios::trunc);
