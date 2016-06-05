@@ -73,7 +73,7 @@ std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy, int x
 
     for (int i = 0; i < sizeOfHistogram; i++)
     {
-        if (histogram[i] != 0)
+        if (histogram[i] != 0.f)
         {
             histogram[i] = sqrt(histogram[i] / sampledPixels);
         }
