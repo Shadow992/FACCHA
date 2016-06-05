@@ -7,8 +7,8 @@
 class IntegralImage
 {
 public:
-    IntegralImage(){};
-    ~IntegralImage(){};
+    IntegralImage() {}
+    ~IntegralImage() {}
     void calculate(Image& img);
     void getMean(int x, int y, int widthWindow, int heightWindow, int& meanR, int& meanG, int& meanB);
     int getRegionDifference(int x, int y, int radius, int& direction);
