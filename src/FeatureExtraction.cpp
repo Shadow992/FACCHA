@@ -79,7 +79,7 @@ std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy,int xS
     return histogram;
 }
 
-void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& featureVector, const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP, int heightLBP, int classifactionWindowWidth, int classificationWindowHeight, int histogramWidth, int histogramHeight, int valueBins, int archBins, float overlapHistogram, int* mappingValuesToBins, int* mappingArchesToBins)
+void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& featureVector, const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP, int classifactionWindowWidth, int classificationWindowHeight, int histogramWidth, int histogramHeight, int valueBins, int archBins, float overlapHistogram, int* mappingValuesToBins, int* mappingArchesToBins)
 {
     int defaultMapping[]= {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
@@ -126,7 +126,7 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
                     const int currIdx=xHistogram+yOffset+x;
                     if(inputLBP[currIdx].length>0)
                     {
-                        const int highestGradientColor=inputLBP[currIdx].highestGradientColor;
+                        //const int highestGradientColor=inputLBP[currIdx].highestGradientColor;
                         const int archDirection=inputLBP[currIdx].archDirection;
                         const int val=inputLBP[currIdx].length;
                         const float currWeight=inputLBP[currIdx].gradientMagnitudeSquare;

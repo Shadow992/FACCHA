@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-         std::cout<<"Default settings or custom settings (d/c): ";
-         std::cin>>defaultSettings;
+        std::cout<<"Default settings or custom settings (d/c): ";
+        std::cin>>defaultSettings;
     }
 
     if(defaultSettings=='c')
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     removeSmallRegions(binarizedImage,imgCon2->width,imgCon->height,18,1);
     removeSmallRegions(binarizedImage,imgCon2->width,imgCon->height,4,1,true);
 
-    for(unsigned int i=0;i<binarizedImage.size();i++)
+    for(unsigned int i=0; i<binarizedImage.size(); i++)
     {
         if(binarizedImage[i] == true)
         {

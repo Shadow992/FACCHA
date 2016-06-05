@@ -9,9 +9,9 @@ Pixel* ImageFramework::searchForImage(Image* img, int startX, int startY, const 
     int searchImageWidth=searchImageRef.width;
     int searchImageHeight=searchImageRef.height;
 
-    for (int y=0; y < imgRef.height; y++)
+    for (int y=startY; y < imgRef.height; y++)
     {
-        for (int x=0; x < imgRef.width; x++)
+        for (int x=startX; x < imgRef.width; x++)
         {
             bool match=true;
 
@@ -118,9 +118,9 @@ Pixel* ImageFramework::searchForPixel(Image* img, int startX, int startY, unsign
 {
     Image& imgRef=*img;
 
-    for(int y=0; y<imgRef.height; y++)
+    for(int y=startY; y<imgRef.height; y++)
     {
-        for(int x=0; x<imgRef.width; x++)
+        for(int x=startX; x<imgRef.width; x++)
         {
             if(imgRef.getPixel(x,y)->colorEquals(red,green,blue,variance))
             {
