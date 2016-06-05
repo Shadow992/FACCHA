@@ -83,7 +83,7 @@ std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy, int x
 }
 
 void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& featureVector,
-    const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP, int heightLBP,
+    const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP,
     int classifactionWindowWidth, int classificationWindowHeight, int histogramWidth, int histogramHeight,
     int valueBins, int archBins, float overlapHistogram, int* mappingValuesToBins, int* mappingArchesToBins)
 {
@@ -132,12 +132,11 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
                     const int currIdx = xHistogram + yOffset + x;
                     if (inputLBP[currIdx].length > 0)
                     {
-                        const int highestGradientColor = inputLBP[currIdx].highestGradientColor;
+                        //const int highestGradientColor = inputLBP[currIdx].highestGradientColor;
                         const int archDirection = inputLBP[currIdx].archDirection;
                         const int val = inputLBP[currIdx].length;
                         const float currWeight = inputLBP[currIdx].gradientMagnitudeSquare;
-                        const int idx
-                            = currHistogram + mappingArchesToBins[archDirection] + archBins * mappingValuesToBins[val];
+                        const int idx = currHistogram + mappingArchesToBins[archDirection] + archBins * mappingValuesToBins[val];
 
                         featureVector[idx] += currWeight;
 
