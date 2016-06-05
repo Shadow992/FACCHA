@@ -16,8 +16,12 @@
 
 #define SQUARE_OF_2 1.41421356237
 #define NUM_1_DIVIDED_SQUARE_OF_2 0.70710678118
+#ifndef M_PI
 #define M_PI 3.14159265359
+#endif
+#ifndef M_E
 #define M_E 2.71828182846
+#endif
 #define REMOVE_WINDOWS_SPECIFIC 1
 
 const unsigned int NORMAL_BMP_HEADER_SIZE = 54;

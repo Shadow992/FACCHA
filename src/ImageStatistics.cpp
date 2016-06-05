@@ -1,7 +1,10 @@
 #include "ImageStatistics.h"
 
+#include <cassert>
+
 void ImageFramework::getRGBVariance(Image* img, int& rVar, int& gVar, int& bVar)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     unsigned long long meanR = 0;
@@ -46,6 +49,7 @@ void ImageFramework::getRGBVariance(Image* img, int& rVar, int& gVar, int& bVar)
 
 bool ImageFramework::calculateSecondOrderDerivatives(Image* img, int x, int y, int& Ixx, int& Ixy, int& Iyy)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     const int xxFilter[] = { 1, 0, -2, 0, 1, 4, 0, -8, 0, 4, 6, 0, -12, 0, 6, 4, 0, -8, 0, 4, 1, 0, -2, 0, 1 };
@@ -89,6 +93,7 @@ bool ImageFramework::calculateSecondOrderDerivatives(Image* img, int x, int y, i
 
 bool ImageFramework::calculateFirstOrderDerivatives(Image* img, int x, int y, int& Ix, int& Iy)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     if (x > 0 && y > 0 && x < imgRef.width - 1 && y < imgRef.height - 1)
@@ -131,6 +136,7 @@ bool ImageFramework::calculateFirstOrderDerivatives(Image* img, int x, int y, in
 
 int ImageFramework::getRegionDifference(Image* img, int x, int y, int radius)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     std::vector<Pixel*> pixelData;
@@ -205,8 +211,8 @@ int ImageFramework::getRegionDifference(Image* img, int x, int y, int radius)
     return std::max(meanDifLeftRight, meanDifUpperLower);
 }
 
-int ImageFramework::getSetPixelCountInLine(Image* img, const std::vector<bool>& binPixel, int& totalPixelCountInLine,
-    int xStart, int yStart, int xEnd, int yEnd, int widthArea)
+int ImageFramework::getSetPixelCountInLine(const std::vector<bool>& binPixel, int& totalPixelCountInLine, int xStart,
+    int yStart, int xEnd, int yEnd, int widthArea)
 {
     int dx = abs(xEnd - xStart);
     int sx = xStart < xEnd ? 1 : -1;
@@ -246,6 +252,7 @@ int ImageFramework::getSetPixelCountInLine(Image* img, const std::vector<bool>& 
 
 int ImageFramework::getPointSymmetricDifferences(Image* img, int x, int y, int radius, int mean)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     int differences = 0;

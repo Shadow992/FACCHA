@@ -16,8 +16,8 @@ namespace ImageFramework
     float getVariance(const std::vector<Pixel*>& pixelData, int mean);
     int getMean(const std::vector<Pixel*>& pixelData);
     int getPointSymmetricDifferences(Image* img, int x, int y, int radius, int mean);
-    int getSetPixelCountInLine(Image* img, const std::vector<bool>& binPixel, int& totalPixelCountInLine, int xStart,
-        int yStart, int xEnd, int yEnd, int widthArea);
+    int getSetPixelCountInLine(const std::vector<bool>& binPixel, int& totalPixelCountInLine, int xStart, int yStart,
+        int xEnd, int yEnd, int widthArea);
     int getRegionDifference(Image* img, int x, int y, int radius);
     bool calculateFirstOrderDerivatives(Image* img, int x, int y, int& Ix, int& Iy);
     bool calculateSecondOrderDerivatives(Image* img, int x, int y, int& Ixx, int& Ixy, int& Iyy);

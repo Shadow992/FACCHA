@@ -1,7 +1,10 @@
 #include "FeatureExtraction.h"
 
+#include <cassert>
+
 std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy, int xStart, int yStart, int w, int h)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     std::vector<float> histogram;
@@ -172,6 +175,7 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
 std::vector<ImageLBP> ImageFramework::calculateLBPOfImage(
     Image* img, int radius, int threshold, int regionMeanThreshold, bool fillHoles)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     std::vector<bool> extractedLBP;

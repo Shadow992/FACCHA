@@ -1,7 +1,10 @@
 #include "ImageManipulation.h"
 
+#include <cassert>
+
 void ImageFramework::invertImage(Image* img)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     for (int i = 0; i < imgRef.width * imgRef.height; i++)
@@ -197,6 +200,7 @@ void ImageFramework::erode(std::vector<bool>& binPixel, int widthBinPixel, int h
 
 void ImageFramework::convertToGrayscaleImage(Image* img, bool equalWeights)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     float grayValue;
@@ -238,6 +242,7 @@ Image* ImageFramework::convolutionFilter(
 Image* ImageFramework::convolutionFilter(
     Image* img, float* filter, int filterWidth, int filterHeight, bool needsNormalization)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     Image* output = new Image(imgRef.width, imgRef.height, 24);
@@ -379,6 +384,7 @@ Image* ImageFramework::convolutionFilter(
 
 void ImageFramework::sub(Image* destImg, const Image* img, bool needsNormalization)
 {
+    assert(img != nullptr);
     const Image& imgRef = *img;
     Image& destImgRef = *destImg;
 
@@ -458,6 +464,8 @@ void ImageFramework::sub(Image* destImg, const Image* img, bool needsNormalizati
 
 void ImageFramework::add(Image* destImg, const Image* img, bool needsNormalization)
 {
+    assert(img != nullptr);
+    assert(destImg != nullptr);
     const Image& imgRef = *img;
     Image& destImgRef = *destImg;
 
@@ -537,6 +545,7 @@ void ImageFramework::add(Image* destImg, const Image* img, bool needsNormalizati
 
 Image* ImageFramework::resizeImageNearestNeighbour(Image* img, int newWidth, int newHeight)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     Image* img2 = new Image(newWidth, newHeight);
@@ -563,6 +572,7 @@ Image* ImageFramework::resizeImageNearestNeighbour(Image* img, int newWidth, int
 
 std::vector<bool> ImageFramework::adaptiveBinarization(Image* img, int radius, int radiusSecondary)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     std::vector<bool> binarized(imgRef.width * imgRef.height, false);
@@ -668,6 +678,7 @@ std::vector<bool> ImageFramework::adaptiveBinarization(Image* img, int radius, i
 
 Image* ImageFramework::medianFilter(Image* img, int radius)
 {
+    assert(img != nullptr);
     Image& imgRef = *img;
 
     Image* output = new Image(imgRef.width, imgRef.height);
