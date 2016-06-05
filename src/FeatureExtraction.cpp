@@ -154,7 +154,7 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
                 }
             }
 
-            if (sumWeight != 0)
+            if (sumWeight != 0.f)
             {
                 for (int i = 0; i < histogramSizeHalf; i++)
                 {
