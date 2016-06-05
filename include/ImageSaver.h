@@ -1,13 +1,14 @@
 #ifndef IMAGESAVER_H
 #define IMAGESAVER_H
 
-#include "Image.h"
-#include "jpeglib.h"
-#include "png.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string.h>
+
+#include "Image.h"
+#include "jpeglib.h"
+#include "png.h"
 
 namespace ImageFramework
 {
