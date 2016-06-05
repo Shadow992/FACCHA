@@ -211,8 +211,8 @@ int ImageFramework::getRegionDifference(Image* img, int x, int y, int radius)
     return std::max(meanDifLeftRight, meanDifUpperLower);
 }
 
-int ImageFramework::getSetPixelCountInLine(Image* img, const std::vector<bool>& binPixel, int& totalPixelCountInLine,
-    int xStart, int yStart, int xEnd, int yEnd, int widthArea)
+int ImageFramework::getSetPixelCountInLine(const std::vector<bool>& binPixel, int& totalPixelCountInLine, int xStart,
+    int yStart, int xEnd, int yEnd, int widthArea)
 {
     int dx = abs(xEnd - xStart);
     int sx = xStart < xEnd ? 1 : -1;

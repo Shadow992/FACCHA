@@ -278,16 +278,15 @@ float ImageFramework::findSimilarImageHillClimbing(Image* img, int startX, int s
         }
     }
 
-    findBetterSolution(img, histogramSearch, bestX, bestY, w, h, checkImage, accuracy, bestX, bestY, bestFitness);
+    findBetterSolution(histogramSearch, bestX, bestY, w, h, checkImage, accuracy, bestX, bestY, bestFitness);
 
     return bestFitness;
 }
 
-void ImageFramework::findBetterSolution(Image* img, std::vector<float>& histogramSearch, int x, int y, int w, int h,
+void ImageFramework::findBetterSolution(std::vector<float>& histogramSearch, int x, int y, int w, int h,
     Image* checkImage, int accuracy, int& bestX, int& bestY, float& fitness)
 {
     assert(checkImage != nullptr);
-    Image& imgRef = *img;
     Image& checkImageRef = *checkImage;
 
     int widthToCheck = checkImageRef.width;
