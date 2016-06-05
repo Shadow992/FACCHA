@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FACCHA" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/FACCHA" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/FACCHA" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="../ObjectDetectionFramework/include" />
+		</Compiler>
+		<Linker>
+			<Add library="E:\Program Files (x86)\CodeBlocks\MinGW\lib\libjpeg-turbo\libjpeg.a" />
+			<Add library="E:\Program Files (x86)\CodeBlocks\MinGW\lib\libjpeg-turbo\libturbojpeg.a" />
+			<Add library="E:\Program Files (x86)\CodeBlocks\MinGW\lib\libPng\libLibPng.a" />
+			<Add library="E:\Program Files (x86)\CodeBlocks\MinGW\lib\zLib\libzLib.a" />
+		</Linker>
+		<Unit filename="../ObjectDetectionFramework/include/ContourDetector.h" />
+		<Unit filename="../ObjectDetectionFramework/include/DistanceTransformer.h" />
+		<Unit filename="../ObjectDetectionFramework/include/FeatureExtraction.h" />
+		<Unit filename="../ObjectDetectionFramework/include/Image.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageFilter.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageFramework.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageLoader.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageManipulation.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageSaver.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageSearch.h" />
+		<Unit filename="../ObjectDetectionFramework/include/ImageStatistics.h" />
+		<Unit filename="../ObjectDetectionFramework/include/IntegralImage.h" />
+		<Unit filename="../ObjectDetectionFramework/include/PartRecognizer.h" />
+		<Unit filename="../ObjectDetectionFramework/include/PartTemplate.h" />
+		<Unit filename="../ObjectDetectionFramework/src/ContourDetector.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/DistanceTransformer.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/FeatureExtraction.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/Image.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageFilter.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageFramework.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageLoader.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageManipulation.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageSaver.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageSearch.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/ImageStatistics.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/IntegralImage.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/PartRecognizer.cpp" />
+		<Unit filename="../ObjectDetectionFramework/src/PartTemplate.cpp" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
