@@ -22,6 +22,8 @@ int main(int argc, char* argv[])
 
     if (argc < 2)
     {
+        std::cout << "Usage: " << argv[0] << " <input file> <configuration mode ('c' or 'd', defaults to 'd')"
+                  << std::endl;
         return 0;
     }
 
