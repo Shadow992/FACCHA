@@ -73,7 +73,7 @@ std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy, int x
 
     for (int i = 0; i < sizeOfHistogram; i++)
     {
-        if (histogram[i] != 0)
+        if (histogram[i] != 0.f)
         {
             histogram[i] = sqrt(histogram[i] / sampledPixels);
         }
@@ -154,7 +154,7 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
                 }
             }
 
-            if (sumWeight != 0)
+            if (sumWeight != 0.f)
             {
                 for (int i = 0; i < histogramSizeHalf; i++)
                 {

@@ -247,7 +247,6 @@ int ImageFramework::getSetPixelCountInLine(const std::vector<bool>& binPixel, in
             yStart += sy;
         }
     }
-    return count;
 }
 
 int ImageFramework::getPointSymmetricDifferences(Image* img, int x, int y, int radius, int mean)
