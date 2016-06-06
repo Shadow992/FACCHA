@@ -44,8 +44,24 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	append_cxx_flag_release("-O3")
 	append_cxx_flag_release("-flto")
 	append_cxx_flag_release("-DNDEBUG")
-elseif("${CMAKE_CXX_COMPILER_ID}" GNU)
-	# TODO
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	append_cxx_flag("-std=c++14")
+	append_cxx_flag("-march=native")
+	if(COMPILE_64BIT)
+		append_cxx_flag("-m64")
+	else()
+		append_cxx_flag("-m32")
+	endif()
+	# Enable all warnings. We'll disable some of them later.
+	append_cxx_flag("-Wall")
+	append_cxx_flag("-Wextra")
+
+	append_cxx_flag_debug("-g")
+	append_cxx_flag_debug("-DDEBUG")
+
+	append_cxx_flag_release("-O3")
+	append_cxx_flag_release("-flto")
+	append_cxx_flag_release("-DNDEBUG")
 endif()
 
 find_package(JPEG REQUIRED)
