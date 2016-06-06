@@ -37,7 +37,6 @@ macro(common_gcc_clang_setup)
 	# Enable all warnings.
 	append_cxx_flag("-Wall")
 
-	append_cxx_flag_debug("-g")
 	append_cxx_flag_debug("-DDEBUG")
 
 	append_cxx_flag_release("-O3")
