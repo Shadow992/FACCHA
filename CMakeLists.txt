@@ -23,7 +23,7 @@ function(append_cxx_flag_debug flag)
 endfunction(append_cxx_flag_debug)
 
 function(append_cxx_flag_release flag)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}_RELEASE ${flag}" PARENT_SCOPE)
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${flag}" PARENT_SCOPE)
 endfunction(append_cxx_flag_release)
 
 macro(common_gcc_clang_setup)
