@@ -60,9 +60,9 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    Image* im2 = new Image(img->width, img->height);
+    auto im2 = new Image(img->width, img->height);
 
-    if (invert == true)
+    if (invert)
     {
         invertImage(img);
     }
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 
     for (unsigned int i = 0; i < binarizedImage.size(); i++)
     {
-        if (binarizedImage[i] == true)
+        if (binarizedImage[i])
         {
             im2->imgData[i].color.red = 255;
             im2->imgData[i].color.green = 255;

@@ -60,7 +60,7 @@ float PartTemplate::calculateChamferDistance(DistanceTransformation& distanceTra
             }
         }
 
-        score /= (float)cPoints;
+        score /= static_cast<float>(cPoints);
         if (bestScore > score)
         {
             bestScore = score;
@@ -115,7 +115,7 @@ bool PartTemplate::readTemplate(const std::string& partFile, unsigned char thres
                 if (img->imgData[idx].color.red < threshold || img->imgData[idx].color.green < threshold
                     || img->imgData[idx].color.blue < threshold)
                 {
-                    if (firstPoint == true)
+                    if (firstPoint)
                     {
                         firstPoint = false;
                         relativeX = x;

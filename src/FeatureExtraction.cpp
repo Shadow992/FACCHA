@@ -83,9 +83,9 @@ std::vector<float> ImageFramework::calcHistogram(Image* img, int accuracy, int x
 }
 
 void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& featureVector,
-    const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP,
-    int classifactionWindowWidth, int classificationWindowHeight, int histogramWidth, int histogramHeight,
-    int valueBins, int archBins, float overlapHistogram, int* mappingValuesToBins, int* mappingArchesToBins)
+    const std::vector<ImageLBP>& inputLBP, int xStart, int yStart, int widthLBP, int classifactionWindowWidth,
+    int classificationWindowHeight, int histogramWidth, int histogramHeight, int valueBins, int archBins,
+    float overlapHistogram, int* mappingValuesToBins, int* mappingArchesToBins)
 {
     int defaultMapping[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
@@ -99,8 +99,8 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
         mappingArchesToBins = defaultMapping;
     }
 
-    const int histogramYStep = (float)histogramHeight * (1.0 - overlapHistogram);
-    const int histogramXStep = (float)histogramWidth * (1.0 - overlapHistogram);
+    const int histogramYStep = static_cast<float>(histogramHeight) * (1.0 - overlapHistogram);
+    const int histogramXStep = static_cast<float>(histogramWidth) * (1.0 - overlapHistogram);
 
     const int newHeight = classificationWindowHeight - histogramHeight + 1;
     const int newWidth = classifactionWindowWidth - histogramWidth + 1;
@@ -132,11 +132,12 @@ void ImageFramework::calculateHistogramFeatureVectorOfLB(std::vector<float>& fea
                     const int currIdx = xHistogram + yOffset + x;
                     if (inputLBP[currIdx].length > 0)
                     {
-                        //const int highestGradientColor = inputLBP[currIdx].highestGradientColor;
+                        // const int highestGradientColor = inputLBP[currIdx].highestGradientColor;
                         const int archDirection = inputLBP[currIdx].archDirection;
                         const int val = inputLBP[currIdx].length;
                         const float currWeight = inputLBP[currIdx].gradientMagnitudeSquare;
-                        const int idx = currHistogram + mappingArchesToBins[archDirection] + archBins * mappingValuesToBins[val];
+                        const int idx
+                            = currHistogram + mappingArchesToBins[archDirection] + archBins * mappingValuesToBins[val];
 
                         featureVector[idx] += currWeight;
 
@@ -205,11 +206,10 @@ std::vector<ImageLBP> ImageFramework::calculateLBPOfImage(
             for (int colorIdx = 0; colorIdx < 3; colorIdx++)
             {
                 extractedLBP.clear();
-                for (unsigned int i = 0; i < extractedPixel.size(); i++)
+                for (auto& i : extractedPixel)
                 {
                     const int usedColorCurr[] = { currPixel->color.red, currPixel->color.green, currPixel->color.blue };
-                    const int usedColorExtracted[] = { extractedPixel[i]->color.red, extractedPixel[i]->color.green,
-                        extractedPixel[i]->color.blue };
+                    const int usedColorExtracted[] = { i->color.red, i->color.green, i->color.blue };
                     if (usedColorCurr[colorIdx] - usedColorExtracted[colorIdx] > threshold)
                     {
                         extractedLBP.push_back(true);
@@ -249,10 +249,10 @@ std::vector<ImageLBP> ImageFramework::calculateLBPOfImage(
                         beforePixelBin = extractedLBP[extractedLBP.size() - 1];
                     }
 
-                    if (currPixelBin == 1)
+                    if (currPixelBin)
                     {
                         countSetBits++;
-                        if (beforePixelBin == 0)
+                        if (!beforePixelBin)
                         {
                             if (endSetBits == -1)
                             {
@@ -261,7 +261,7 @@ std::vector<ImageLBP> ImageFramework::calculateLBPOfImage(
                             countOfAlternations++;
                         }
                     }
-                    else if (currPixelBin == 0 && beforePixelBin == 1)
+                    else if (!currPixelBin && beforePixelBin)
                     {
                         if (startSetBits == -1)
                         {

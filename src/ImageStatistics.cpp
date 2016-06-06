@@ -222,10 +222,10 @@ int ImageFramework::getSetPixelCountInLine(const std::vector<bool>& binPixel, in
     int e2;
     int count = 0;
 
-    while (1)
+    while (true)
     {
         totalPixelCountInLine++;
-        if (binPixel[xStart + yStart * widthArea] == true)
+        if (binPixel[xStart + yStart * widthArea])
         {
             count++;
         }
@@ -278,9 +278,9 @@ int ImageFramework::getPointSymmetricDifferences(Image* img, int x, int y, int r
 int ImageFramework::getMean(const std::vector<Pixel*>& pixelData)
 {
     int mean = 0;
-    for (unsigned int i = 0; i < pixelData.size(); i++)
+    for (auto i : pixelData)
     {
-        mean += pixelData[i]->color.red;
+        mean += i->color.red;
     }
     return mean / pixelData.size();
 }
@@ -288,12 +288,12 @@ int ImageFramework::getMean(const std::vector<Pixel*>& pixelData)
 float ImageFramework::getVariance(const std::vector<Pixel*>& pixelData, int mean)
 {
     float sumVar = 0.0;
-    for (unsigned int i = 0; i < pixelData.size(); i++)
+    for (auto i : pixelData)
     {
-        sumVar += (pixelData[i]->color.red - mean) * (pixelData[i]->color.red - mean);
+        sumVar += (i->color.red - mean) * (i->color.red - mean);
     }
 
-    return sumVar / (float)pixelData.size();
+    return sumVar / static_cast<float>(pixelData.size());
 }
 
 int ImageFramework::countPixelAlternationsRing(const std::vector<Pixel*>& pixelData, int mean, int gate)
@@ -342,18 +342,18 @@ int ImageFramework::countPixelAlternationsRingMorphology(const std::vector<Pixel
     countWhiteArea1 = 0;
     countWhiteArea2 = 0;
 
-    for (unsigned int i = 0; i < pixelData.size(); i++)
+    for (auto i : pixelData)
     {
-        currPixel = pixelData[i];
+        currPixel = i;
 
         // If image is black and white all colors (red, green, blue) are holding the same value
         if (currPixel->color.red > mean)
         {
-            binPixel.push_back(1);
+            binPixel.push_back(true);
         }
         else
         {
-            binPixel.push_back(0);
+            binPixel.push_back(false);
         }
     }
 
@@ -378,9 +378,9 @@ int ImageFramework::countPixelAlternationsRingMorphology(const std::vector<Pixel
             beforePixelBin = binPixel[binPixel.size() - 1];
         }
 
-        if (currPixelBin == 0)
+        if (!currPixelBin)
         {
-            if (area1 == true)
+            if (area1)
             {
                 countBlackArea1++;
             }
@@ -389,24 +389,21 @@ int ImageFramework::countPixelAlternationsRingMorphology(const std::vector<Pixel
                 countBlackArea2++;
             }
 
-            if (beforePixelBin == 1)
+            if (beforePixelBin)
             {
                 countOfAlternations++;
             }
         }
-        else if (currPixelBin == 1)
+        else
         {
-            if (beforePixelBin == 0)
+            if (beforePixelBin)
             {
-                if (area1 == true)
-                    area1 = false;
-                else
-                    area1 = true;
+                area1 = !area1;
 
                 countOfAlternations++;
             }
 
-            if (area1 == true)
+            if (area1)
             {
                 countWhiteArea1++;
             }
@@ -424,10 +421,10 @@ Point ImageFramework::calculateCenter(const std::vector<Pixel*>& points)
 {
     Point p;
 
-    for (unsigned int i = 0; i < points.size(); i++)
+    for (auto point : points)
     {
-        p.x += points[i]->x;
-        p.y += points[i]->y;
+        p.x += point->x;
+        p.y += point->y;
     }
 
     p.x /= points.size();
@@ -442,15 +439,15 @@ int ImageFramework::calculateMaxPixelVariance(const std::vector<Pixel*>& pixelDa
     int thresholdDark = mean - gate;
     int thresholdLight = mean + gate;
 
-    for (unsigned int i = 0; i < pixelData.size(); i++)
+    for (auto i : pixelData)
     {
-        if (pixelData[i]->color.red < thresholdDark)
+        if (i->color.red < thresholdDark)
         {
-            lightPixelVar += abs(pixelData[i]->color.red - mean);
+            lightPixelVar += abs(i->color.red - mean);
         }
-        else if (pixelData[i]->color.red > thresholdLight)
+        else if (i->color.red > thresholdLight)
         {
-            darkPixelVar += abs(pixelData[i]->color.red - mean);
+            darkPixelVar += abs(i->color.red - mean);
         }
     }
 

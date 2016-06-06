@@ -8,28 +8,28 @@ int ImageFramework::saveAsPNG(Image* img, const std::string& fileName)
     Image& imgRef = *img;
 
     FILE* fp;
-    png_structp png_ptr = NULL;
-    png_infop info_ptr = NULL;
+    png_structp png_ptr = nullptr;
+    png_infop info_ptr = nullptr;
     int x, y;
-    png_byte** row_pointers = NULL;
+    png_byte** row_pointers = nullptr;
     int pixel_size = 3;
     int depth = 8;
 
     fp = fopen(fileName.c_str(), "wb");
-    if (!fp)
+    if (fp == nullptr)
     {
         return -3;
     }
 
-    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (png_ptr == NULL)
+    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    if (png_ptr == nullptr)
     {
         fclose(fp);
         return -1;
     }
 
     info_ptr = png_create_info_struct(png_ptr);
-    if (info_ptr == NULL)
+    if (info_ptr == nullptr)
     {
         png_destroy_write_struct(&png_ptr, &info_ptr);
         return -2;
@@ -42,10 +42,10 @@ int ImageFramework::saveAsPNG(Image* img, const std::string& fileName)
 
     /* Initialize rows of PNG. */
 
-    row_pointers = (png_byte**)png_malloc(png_ptr, imgRef.height * sizeof(png_byte*));
+    row_pointers = reinterpret_cast<png_byte**>(png_malloc(png_ptr, imgRef.height * sizeof(png_byte*)));
     for (y = 0; y < imgRef.height; ++y)
     {
-        png_byte* row = (png_byte*)png_malloc(png_ptr, sizeof(uint8_t) * imgRef.width * pixel_size);
+        png_byte* row = reinterpret_cast<png_byte*>(png_malloc(png_ptr, sizeof(uint8_t) * imgRef.width * pixel_size));
         row_pointers[y] = row;
         for (x = 0; x < imgRef.width; ++x)
         {
@@ -59,7 +59,7 @@ int ImageFramework::saveAsPNG(Image* img, const std::string& fileName)
 
     png_init_io(png_ptr, fp);
     png_set_rows(png_ptr, info_ptr, row_pointers);
-    png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
+    png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, nullptr);
 
     for (y = 0; y < imgRef.height; y++)
     {
@@ -87,33 +87,33 @@ void ImageFramework::saveAsBMP(Image* img, const std::string& fileName)
 
         bmpFile << 'B' << 'M';
         tmpInt = imgRef.width * imgRef.height * 3 + imgRef.paddigPerLine * imgRef.height + 54;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 54;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 40;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = imgRef.width;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = -imgRef.height;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 1;
-        bmpFile.write((char*)&tmpInt, 2);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 2);
         tmpInt = 24;
-        bmpFile.write((char*)&tmpInt, 2);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 2);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = imgRef.width * imgRef.height * 3 + imgRef.paddigPerLine * imgRef.height;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
         tmpInt = 0;
-        bmpFile.write((char*)&tmpInt, 4);
+        bmpFile.write(reinterpret_cast<char*>(&tmpInt), 4);
 
         std::vector<unsigned char> imageData(
             imgRef.width * imgRef.height * 3 + imgRef.paddigPerLine * imgRef.height + 5);
@@ -124,7 +124,7 @@ void ImageFramework::saveAsBMP(Image* img, const std::string& fileName)
         {
             for (int x = 0; x < imgRef.width; x++)
             {
-                memcpy(imageDataPtr, (unsigned char*)&(imgRef.imgData[overallPos].color), 3);
+                memcpy(imageDataPtr, reinterpret_cast<unsigned char*>(&(imgRef.imgData[overallPos].color)), 3);
                 overallPos++;
                 imageDataPtr += 3;
             }
@@ -136,7 +136,8 @@ void ImageFramework::saveAsBMP(Image* img, const std::string& fileName)
             }
         }
 
-        bmpFile.write((char*)imageData.data(), imgRef.width * imgRef.height * 3 + imgRef.paddigPerLine * imgRef.height);
+        bmpFile.write(reinterpret_cast<char*>(imageData.data()),
+            imgRef.width * imgRef.height * 3 + imgRef.paddigPerLine * imgRef.height);
 
         bmpFile.flush();
         bmpFile.close();

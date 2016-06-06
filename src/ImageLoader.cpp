@@ -23,13 +23,13 @@ Image* ImageFramework::readAndParseJPEGFile(const std::string& fileName)
     jpeg_read_header(&info, TRUE); // read jpeg file header
 
     // decompress the file
-    if (!jpeg_start_decompress(&info))
+    if (jpeg_start_decompress(&info) == 0)
     {
         jpeg_destroy_decompress(&info);
         return nullptr;
     }
 
-    Image* img = new Image();
+    auto img = new Image();
     if (img == nullptr)
     {
         return nullptr;
@@ -46,11 +46,11 @@ Image* ImageFramework::readAndParseJPEGFile(const std::string& fileName)
     // read scanlines one at a time & put bytes
     //    in currData[] array.
     //--------------------------------------------
-    unsigned char* currData = new unsigned char[imgRef.width * imgRef.height * channels];
-    while ((int)info.output_scanline < imgRef.height)
+    auto currData = new unsigned char[imgRef.width * imgRef.height * channels];
+    while (static_cast<int>(info.output_scanline) < imgRef.height)
     {
         // Enable jpeg_read_scanlines() to fill our currData array
-        rowptr[0] = (unsigned char*)currData + channels * imgRef.width * info.output_scanline;
+        rowptr[0] = currData + channels * imgRef.width * info.output_scanline;
 
         if (jpeg_read_scanlines(&info, rowptr, 1) != 1)
         {
@@ -61,7 +61,7 @@ Image* ImageFramework::readAndParseJPEGFile(const std::string& fileName)
         }
     }
 
-    if (!jpeg_finish_decompress(&info))
+    if (jpeg_finish_decompress(&info) == 0)
     {
         jpeg_destroy_decompress(&info);
         delete img;
@@ -78,7 +78,7 @@ Image* ImageFramework::readAndParseJPEGFile(const std::string& fileName)
     int x = 0;
     int y = 0;
     unsigned char* beginningimgData = currData;
-    while (1)
+    while (true)
     {
         if (idx >= imgSize)
         {
@@ -133,11 +133,9 @@ Image* ImageFramework::readAndParseBMPFile(const std::string& imageFile)
             {
                 return parseBMPFile(memblock, size);
             }
-            else
-            {
-                return nullptr;
-                // no bmp
-            }
+
+            return nullptr;
+            // no bmp
         }
         else
         {
@@ -165,27 +163,27 @@ Image* ImageFramework::readAndParsePNGFile(const std::string& imageFile)
 
     /* open file and test for it being a png */
     FILE* fp = fopen(imageFile.c_str(), "rb");
-    if (!fp)
+    if (fp == nullptr)
     {
         return nullptr;
     }
 
     fread(header, 1, 8, fp);
-    if (png_sig_cmp(header, 0, 8))
+    if (png_sig_cmp(header, 0, 8) != 0)
     {
         return nullptr;
     }
 
     /* initialize stuff */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
-    if (!png_ptr)
+    if (png_ptr == nullptr)
     {
         return nullptr;
     }
 
     info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
+    if (info_ptr == nullptr)
     {
         return nullptr;
     }
@@ -195,7 +193,7 @@ Image* ImageFramework::readAndParsePNGFile(const std::string& imageFile)
 
     png_read_info(png_ptr, info_ptr);
 
-    Image* img = new Image();
+    auto img = new Image();
     if (img == nullptr)
     {
         return nullptr;
@@ -208,26 +206,34 @@ Image* ImageFramework::readAndParsePNGFile(const std::string& imageFile)
 
     /* Change a paletted/grayscale image to RGB */
     if (color_type == PNG_COLOR_TYPE_PALETTE && bit_depth <= 8)
+    {
         png_set_expand(png_ptr);
+    }
 
-    if (color_type & PNG_COLOR_MASK_ALPHA)
+    if ((color_type & PNG_COLOR_MASK_ALPHA) != 0)
+    {
         png_set_strip_alpha(png_ptr);
+    }
 
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    {
         png_set_gray_to_rgb(png_ptr);
+    }
 
     if (bit_depth == 16)
+    {
         png_set_strip_16(png_ptr);
+    }
 
     png_set_interlace_handling(png_ptr);
     png_read_update_info(png_ptr, info_ptr);
 
     /* read file */
 
-    row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * img->height);
+    row_pointers = reinterpret_cast<png_bytep*>(malloc(sizeof(png_bytep) * img->height));
     for (int y = 0; y < img->height; y++)
     {
-        row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png_ptr, info_ptr));
+        row_pointers[y] = reinterpret_cast<png_byte*>(malloc(png_get_rowbytes(png_ptr, info_ptr)));
     }
 
     png_read_image(png_ptr, row_pointers);
@@ -262,18 +268,18 @@ Image* ImageFramework::readAndParsePNGFile(const std::string& imageFile)
     return img;
 }
 
-Image* ImageFramework::parseBMPFile(char* memblock, unsigned int size)
+Image* ImageFramework::parseBMPFile(char* memblock, unsigned int /*size*/)
 {
     bool bottomUpImage = true;
 
-    unsigned char* currData = (unsigned char*)memblock;
+    unsigned char* currData = reinterpret_cast<unsigned char*>(memblock);
 
     currData += 10;
-    unsigned int bmpOffset = *((unsigned int*)currData);
+    unsigned int bmpOffset = *(reinterpret_cast<unsigned int*>(currData));
     currData += 8;
-    int bmpWidth = *((int*)currData);
+    int bmpWidth = *(reinterpret_cast<int*>(currData));
     currData += 4;
-    int bmpHeight = *((int*)currData);
+    int bmpHeight = *(reinterpret_cast<int*>(currData));
     if (bmpHeight < 0)
     {
         bottomUpImage = false;
@@ -285,11 +291,11 @@ Image* ImageFramework::parseBMPFile(char* memblock, unsigned int size)
         currData++;
     }
     currData += 2;
-    unsigned short bmpType = *((unsigned short*)currData); // 16, 24 or 32 bpp
+    unsigned short bmpType = *(reinterpret_cast<unsigned short*>(currData)); // 16, 24 or 32 bpp
 
     if (bmpType != 16 && bmpType != 24 && bmpType != 32)
     {
-        bmpType = *((unsigned int*)currData); // 16, 24 or 32 bpp
+        bmpType = *(reinterpret_cast<unsigned int*>(currData)); // 16, 24 or 32 bpp
         currData += 2;
         if (bmpType != 16 && bmpType != 24 && bmpType != 32)
         {
@@ -297,15 +303,15 @@ Image* ImageFramework::parseBMPFile(char* memblock, unsigned int size)
         }
     }
     currData += 2;
-    unsigned int compression = *((unsigned int*)currData); // should be 0
+    unsigned int compression = *(reinterpret_cast<unsigned int*>(currData)); // should be 0
     if (compression != 0)
     {
         return nullptr;
     }
 
-    currData = (unsigned char*)memblock + bmpOffset;
+    currData = reinterpret_cast<unsigned char*>(memblock) + bmpOffset;
 
-    Image* img = new Image();
+    auto img = new Image();
     if (img == nullptr)
     {
         return nullptr;
@@ -336,13 +342,13 @@ void ImageFramework::parseBMPData(Image* img, unsigned char* currData, int bmpWi
     int y = 0;
     int addY = 1;
 
-    if (bottomUpImage == true)
+    if (bottomUpImage)
     {
         y = bmpHeight - 1;
         addY = -1;
     }
 
-    while (1)
+    while (true)
     {
         idx = x + y * bmpWidth;
         if (idx >= totalSize)
@@ -371,9 +377,9 @@ void ImageFramework::parseBMPData(Image* img, unsigned char* currData, int bmpWi
         }
         else if (bmpType == 16)
         {
-            imgRef.imgData[idx].color.blue = *((unsigned int*)currData) & 0x0000001F;
-            imgRef.imgData[idx].color.green = *((unsigned int*)currData) & 0x000003E0;
-            imgRef.imgData[idx].color.red = *((unsigned int*)currData) & 0x00007C00;
+            imgRef.imgData[idx].color.blue = *(reinterpret_cast<unsigned int*>(currData)) & 0x0000001F;
+            imgRef.imgData[idx].color.green = *(reinterpret_cast<unsigned int*>(currData)) & 0x000003E0;
+            imgRef.imgData[idx].color.red = *(reinterpret_cast<unsigned int*>(currData)) & 0x00007C00;
             currData += 2;
         }
         imgRef.imgData[idx].x = x;

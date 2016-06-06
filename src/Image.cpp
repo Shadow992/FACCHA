@@ -89,7 +89,7 @@ void Image::drawLine(int xStart, int yStart, int xEnd, int yEnd, unsigned char r
     int e2;
     int halfWidth = lineWidth / 2;
 
-    while (1)
+    while (true)
     {
         setPixelColor(xStart, yStart, red, green, blue);
         for (int i = -halfWidth; i < halfWidth; i++)

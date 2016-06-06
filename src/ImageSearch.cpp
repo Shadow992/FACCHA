@@ -12,9 +12,9 @@ Pixel* ImageFramework::searchForImage(
     int searchImageWidth = searchImageRef.width;
     int searchImageHeight = searchImageRef.height;
 
-    for (int y=startY; y < imgRef.height; y++)
+    for (int y = startY; y < imgRef.height; y++)
     {
-        for (int x=startX; x < imgRef.width; x++)
+        for (int x = startX; x < imgRef.width; x++)
         {
             bool match = true;
 
@@ -23,20 +23,19 @@ Pixel* ImageFramework::searchForImage(
                 for (int searchX = 0; searchX < searchImageWidth; searchX++)
                 {
                     if (x + searchX < imgRef.width && y + searchY < imgRef.height
-                        && imgRef.getPixel(x + searchX, y + searchY)
-                                ->colorEquals(searchImageRef.getPixel(searchX, searchY), variance)
-                            == false)
+                        && !imgRef.getPixel(x + searchX, y + searchY)
+                                ->colorEquals(searchImageRef.getPixel(searchX, searchY), variance))
                     {
                         match = false;
                         break;
                     }
                 }
-                if (match == false)
+                if (!match)
                 {
                     break;
                 }
             }
-            if (match == true)
+            if (match)
             {
                 return imgRef.getPixel(x, y);
             }
@@ -56,9 +55,8 @@ bool ImageFramework::equalsImage(Image* img, int x, int y, const Image* searchIm
         for (int searchX = 0; searchX < searchImageRef.width; searchX++)
         {
             if (x + searchX < imgRef.width && y + searchY < imgRef.height
-                && imgRef.getPixel(x + searchX, y + searchY)
-                        ->colorEquals(searchImageRef.getPixel(searchX, searchY), variance)
-                    == false)
+                && !imgRef.getPixel(x + searchX, y + searchY)
+                        ->colorEquals(searchImageRef.getPixel(searchX, searchY), variance))
             {
                 return false;
             }
@@ -76,14 +74,16 @@ Pixel* ImageFramework::searchForImageNextToPosition(
     for (int radius = 0;; radius++)
     {
         if (y + radius >= imgRef.height && y - radius < 0 && x + radius >= imgRef.width && x - radius < 0)
+        {
             break;
+        }
 
         for (int nearestX = x - radius; nearestX <= x + radius; nearestX++)
         {
             if (y - radius >= 0)
             {
                 if (nearestX >= 0 && nearestX < imgRef.width
-                    && equalsImage(img, nearestX, y - radius, searchImage, variance) == true)
+                    && equalsImage(img, nearestX, y - radius, searchImage, variance))
                 {
                     return imgRef.getPixel(nearestX, y - radius);
                 }
@@ -92,7 +92,7 @@ Pixel* ImageFramework::searchForImageNextToPosition(
             if (y + radius < imgRef.height)
             {
                 if (nearestX >= 0 && nearestX < imgRef.width
-                    && equalsImage(img, nearestX, y + radius, searchImage, variance) == true)
+                    && equalsImage(img, nearestX, y + radius, searchImage, variance))
                 {
 
                     return imgRef.getPixel(nearestX, y + radius);
@@ -105,7 +105,7 @@ Pixel* ImageFramework::searchForImageNextToPosition(
             if (x + radius < imgRef.width)
             {
                 if (nearestY >= 0 && nearestY < imgRef.height
-                    && equalsImage(img, x + radius, nearestY, searchImage, variance) == true)
+                    && equalsImage(img, x + radius, nearestY, searchImage, variance))
                 {
                     return imgRef.getPixel(x + radius, nearestY);
                 }
@@ -114,7 +114,7 @@ Pixel* ImageFramework::searchForImageNextToPosition(
             if (x - radius >= 0)
             {
                 if (nearestY >= 0 && nearestY < imgRef.height
-                    && equalsImage(img, x - radius, nearestY, searchImage, variance) == true)
+                    && equalsImage(img, x - radius, nearestY, searchImage, variance))
                 {
                     return imgRef.getPixel(x - radius, nearestY);
                 }
@@ -137,9 +137,9 @@ Pixel* ImageFramework::searchForPixel(Image* img, int startX, int startY, unsign
     assert(img != nullptr);
     Image& imgRef = *img;
 
-    for(int y=startY; y<imgRef.height; y++)
+    for (int y = startY; y < imgRef.height; y++)
     {
-        for(int x=startX; x<imgRef.width; x++)
+        for (int x = startX; x < imgRef.width; x++)
         {
             if (imgRef.getPixel(x, y)->colorEquals(red, green, blue, variance))
             {
@@ -165,7 +165,9 @@ Pixel* ImageFramework::searchPixelNextToPosition(
     for (int radius = 0;; radius++)
     {
         if (y + radius >= imgRef.height && y - radius < 0 && x + radius >= imgRef.width && x - radius < 0)
+        {
             break;
+        }
 
         for (int nearestX = x - radius; nearestX <= x + radius; nearestX++)
         {
@@ -255,8 +257,8 @@ float ImageFramework::findSimilarImageHillClimbing(Image* img, int startX, int s
 
     auto histogramSearch = calcHistogram(checkImage, accuracy, 0, 0, widthToCheck, heightToCheck);
 
-    int freeSpaceX = (float)widthToCheck / overlap;
-    int freeSpaceY = (float)heightToCheck / overlap;
+    int freeSpaceX = static_cast<float>(widthToCheck) / overlap;
+    int freeSpaceY = static_cast<float>(heightToCheck) / overlap;
 
     float currFitness = 1000000000000000;
     float bestFitness = 100000;
@@ -295,11 +297,13 @@ void ImageFramework::findBetterSolution(std::vector<float>& histogramSearch, int
     bool foundBetter = true;
     int radius = 1;
 
-    while (foundBetter == true)
+    while (foundBetter)
     {
         foundBetter = false;
         if (y + radius >= h && y - radius < 0 && x + radius >= w && x - radius < 0)
+        {
             break;
+        }
 
         for (int nearestX = x - radius; nearestX <= x + radius; nearestX++)
         {

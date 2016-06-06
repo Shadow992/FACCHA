@@ -14,14 +14,14 @@ std::vector<float> ImageFramework::calculate1DGaussianKernel(int size, float sig
     for (int i = -midOfKernel; i <= midOfKernel; i++)
     {
         kernel[i + midOfKernel]
-            = 1.0 / sqrt(2.0 * M_PI * sigma * sigma) * exp((-(float)(i * i) / (2.0 * sigma * sigma)));
+            = 1.0 / sqrt(2.0 * M_PI * sigma * sigma) * exp((-static_cast<float>(i * i) / (2.0 * sigma * sigma)));
         sum += kernel[i + midOfKernel];
     }
 
     // Normalize values so the sum is 1.0
-    for (unsigned int i = 0; i < kernel.size(); i++)
+    for (float& i : kernel)
     {
-        kernel[i] /= sum;
+        i /= sum;
     }
     return kernel;
 }

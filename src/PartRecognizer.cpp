@@ -8,16 +8,16 @@ PartRecognizer::PartRecognizer()
 PartRecognizer::~PartRecognizer()
 {
     // dtor
-    for (unsigned int i = 0; i < parts.size(); i++)
+    for (auto& part : parts)
     {
-        delete parts[i];
+        delete part;
     }
 }
 
 void PartRecognizer::addPartTemplate(const std::string& fileName, int scaling)
 {
-    PartTemplate* temp = new PartTemplate;
-    if (temp->readTemplate(fileName, 50, scaling) == true)
+    auto temp = new PartTemplate;
+    if (temp->readTemplate(fileName, 50, scaling))
     {
         parts.push_back(temp);
     }
@@ -25,18 +25,18 @@ void PartRecognizer::addPartTemplate(const std::string& fileName, int scaling)
 
 void PartRecognizer::addPartTemplate(const std::vector<std::string>& fileNames, int scaling)
 {
-    PartTemplate* temp = new PartTemplate;
+    auto temp = new PartTemplate;
     bool success = false;
 
     for (unsigned int i = 0; i < fileNames.size(); i++)
     {
-        if (temp->readTemplate(fileNames[i], 50, scaling) == true)
+        if (temp->readTemplate(fileNames[i], 50, scaling))
         {
             success = true;
         }
     }
 
-    if (success == true)
+    if (success)
     {
         parts.push_back(temp);
     }

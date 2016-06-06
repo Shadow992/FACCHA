@@ -9,7 +9,7 @@ void ContourDetector::performHysteresisRec(std::vector<OrientedGradient>& inputO
     }
 
     const int currIdx = x + y * widthOG;
-    if (visited[currIdx] == true)
+    if (visited[currIdx])
     {
         return;
     }
@@ -47,7 +47,7 @@ void ContourDetector::performHysteresis(
         {
             int countEdgePoints = 0;
             const int currIdx = yOffset + x;
-            if (visited[currIdx] == false)
+            if (!visited[currIdx])
             {
                 if (inputOG[currIdx].gradientMagnitude > high)
                 {
@@ -107,10 +107,10 @@ void ContourDetector::performNMPOnOG(std::vector<OrientedGradient>& inputOG, int
         }
     }
 
-    for (unsigned int i = 0; i < foundEdgePoints.size(); i++)
+    for (int foundEdgePoint : foundEdgePoints)
     {
-        inputOG[foundEdgePoints[i]].direction = -1;
-        inputOG[foundEdgePoints[i]].gradientMagnitude = -1;
+        inputOG[foundEdgePoint].direction = -1;
+        inputOG[foundEdgePoint].gradientMagnitude = -1;
     }
 }
 
@@ -129,12 +129,12 @@ std::vector<OrientedGradient> ContourDetector::getOrientedGradients(Image& img, 
             const int currIdx = yOffset + x;
 
             vectorOG[currIdx].gradientMagnitude = intImg.getRegionDifference(x, y, radius, vectorOG[currIdx].direction);
-            if (bigger == true && vectorOG[currIdx].gradientMagnitude < threshold)
+            if (bigger && vectorOG[currIdx].gradientMagnitude < threshold)
             {
                 vectorOG[currIdx].gradientMagnitude = -1;
                 vectorOG[currIdx].direction = -1;
             }
-            else if (bigger == false && vectorOG[currIdx].gradientMagnitude > threshold)
+            else if (!bigger && vectorOG[currIdx].gradientMagnitude > threshold)
             {
                 vectorOG[currIdx].gradientMagnitude = -1;
                 vectorOG[currIdx].direction = -1;
@@ -158,11 +158,11 @@ std::vector<OrientedGradient> ContourDetector::extractContours(
 std::vector<Moment> ContourDetector::calculateMomentForRegion(Image& img, int x, int y, int radius)
 {
     std::vector<Moment> m(6);
-    for (unsigned int i = 0; i < m.size(); i++)
+    for (auto& i : m)
     {
-        m[i].momentR = 0;
-        m[i].momentG = 0;
-        m[i].momentB = 0;
+        i.momentR = 0;
+        i.momentG = 0;
+        i.momentB = 0;
     }
 
     if (x >= radius && y >= radius && x < img.width - radius && y < img.height - radius)

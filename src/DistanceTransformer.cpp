@@ -98,7 +98,7 @@ std::vector<float> DistanceTransformer::calculateDistanceTransformation(
 
     for (unsigned int i = 0; i < binaryImg.size(); i++)
     {
-        if (binaryImg[i] == true)
+        if (binaryImg[i])
         {
             calculatedDT[i] = 0.0;
         }

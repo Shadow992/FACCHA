@@ -4,14 +4,14 @@
 
 float fastEuclid(float x1, float x2)
 {
-    x1=std::abs(x1);
-    x2=std::abs(x2);
+    x1 = std::abs(x1);
+    x2 = std::abs(x2);
 
-    if ( x1 < x2 )
+    if (x1 < x2)
     {
-        return 0.41*x1 + 0.941246*x2;
+        return 0.41 * x1 + 0.941246 * x2;
     }
-    return 0.41*x2 + 0.941246*x1;
+    return 0.41 * x2 + 0.941246 * x1;
 }
 
 unsigned int isqrt(unsigned int x)
@@ -24,7 +24,9 @@ unsigned int isqrt(unsigned int x)
     /* "one" starts at the highest power of four <= than the argument. */
     one = 1 << 30; /* second-to-top bit set */
     while (one > op)
+    {
         one >>= 2;
+    }
 
     while (one != 0)
     {
@@ -38,7 +40,6 @@ unsigned int isqrt(unsigned int x)
     }
     return res;
 }
-
 
 void ImageFramework::invertImage(Image* img)
 {
@@ -65,7 +66,7 @@ void ImageFramework::removeSmallRegions(
         const int yOffset = y * width;
         for (int x = 0; x < width; x++)
         {
-            if (visited[yOffset + x] == false && binarizedImage[yOffset + x] == groupingColor)
+            if (!visited[yOffset + x] && binarizedImage[yOffset + x] == groupingColor)
             {
                 int cPointsInRegion = 1;
                 int currX = x;
@@ -74,7 +75,7 @@ void ImageFramework::removeSmallRegions(
                 visited[yOffset + x] = true;
                 checkedPoints.push_back(yOffset + x);
 
-                while (pointsToCheck.size() > 0)
+                while (!pointsToCheck.empty())
                 {
                     currX = std::get<0>(pointsToCheck.back());
                     currY = std::get<1>(pointsToCheck.back());
@@ -89,7 +90,7 @@ void ImageFramework::removeSmallRegions(
                             {
                                 if (currX + j >= 0 && currX + j < width)
                                 {
-                                    if (visited[offset + j] == false && binarizedImage[offset + j] == groupingColor)
+                                    if (!visited[offset + j] && binarizedImage[offset + j] == groupingColor)
                                     {
                                         visited[offset + j] = true;
                                         checkedPoints.push_back(offset + j);
@@ -104,9 +105,9 @@ void ImageFramework::removeSmallRegions(
 
                 if (cPointsInRegion < minSize)
                 {
-                    for (unsigned int i = 0; i < checkedPoints.size(); i++)
+                    for (int checkedPoint : checkedPoints)
                     {
-                        binarizedImage[checkedPoints[i]] = !groupingColor;
+                        binarizedImage[checkedPoint] = !groupingColor;
                     }
                 }
                 checkedPoints.clear();
@@ -135,23 +136,23 @@ void ImageFramework::fillOnePixelHoles(std::vector<bool>& binPixel)
         currPixelValue = nextPixelValue;
         nextPixelValue = binPixel[i + 1];
 
-        if (beforePixelValue == 0 && currPixelValue == 1 && nextPixelValue == 0)
+        if (!beforePixelValue && currPixelValue && !nextPixelValue)
         {
-            binPixel[i] = 0;
+            binPixel[i] = false;
         }
-        else if (beforePixelValue == 1 && currPixelValue == 0 && nextPixelValue == 1)
+        else if (beforePixelValue && !currPixelValue && nextPixelValue)
         {
-            binPixel[i] = 1;
+            binPixel[i] = true;
         }
     }
 
-    if (binPixel[0] == 0 && intersectingPixelValue == 1 && binPixel[binPixelSize - 2] == 0)
+    if (!binPixel[0] && intersectingPixelValue && !binPixel[binPixelSize - 2])
     {
-        binPixel[binPixelSize - 1] = 0;
+        binPixel[binPixelSize - 1] = false;
     }
-    else if (binPixel[0] == 1 && intersectingPixelValue == 0 && binPixel[binPixelSize - 2] == 1)
+    else if (binPixel[0] && !intersectingPixelValue && binPixel[binPixelSize - 2])
     {
-        binPixel[binPixelSize - 1] = 1;
+        binPixel[binPixelSize - 1] = true;
     }
 }
 
@@ -171,7 +172,7 @@ void ImageFramework::dilate(std::vector<bool>& binPixel, int widthBinPixel, int 
     {
         for (int x = 0; x < widthBinPixel; x++)
         {
-            if (binPixelCopy[y * widthBinPixel + x] == true)
+            if (binPixelCopy[y * widthBinPixel + x])
             {
                 const int lowerBoundX = std::max(x - radiusWidthDilation, 0);
                 const int lowerBoundY = std::max(y - radiusHeightDilation, 0);
@@ -184,7 +185,7 @@ void ImageFramework::dilate(std::vector<bool>& binPixel, int widthBinPixel, int 
                     const int yOffset = yDilate * widthBinPixel;
                     for (int xDilate = lowerBoundX; xDilate <= upperBoundX; xDilate++)
                     {
-                        if (cross == false || (cross == true && (xDilate == x || yDilate == y)))
+                        if (!cross || (cross && (xDilate == x || yDilate == y)))
                         {
                             binPixel[xDilate + yOffset] = true;
                         }
@@ -212,7 +213,7 @@ void ImageFramework::erode(std::vector<bool>& binPixel, int widthBinPixel, int h
     {
         for (int x = 0; x < widthBinPixel; x++)
         {
-            if (binPixelCopy[y * widthBinPixel + x] == false)
+            if (!binPixelCopy[y * widthBinPixel + x])
             {
                 const int lowerBoundX = std::max(x - radiusWidthDilation, 0);
                 const int lowerBoundY = std::max(y - radiusHeightDilation, 0);
@@ -225,7 +226,7 @@ void ImageFramework::erode(std::vector<bool>& binPixel, int widthBinPixel, int h
                     const int yOffset = yDilate * widthBinPixel;
                     for (int xDilate = lowerBoundX; xDilate <= upperBoundX; xDilate++)
                     {
-                        if (cross == false || (cross == true && (xDilate == x || yDilate == y)))
+                        if (!cross || (cross && (xDilate == x || yDilate == y)))
                         {
                             binPixel[xDilate + yOffset] = false;
                         }
@@ -236,32 +237,31 @@ void ImageFramework::erode(std::vector<bool>& binPixel, int widthBinPixel, int h
     }
 }
 
-
 void ImageFramework::convertToGrayscaleImageEnhancedContrast(Image* img, int neighbourhoodRadius)
 {
-    Image& imgRef=*img;
+    Image& imgRef = *img;
 
-    auto xyzColors=convertRGBToXYZ(img);
-    auto labColors=convertXYZToLab(xyzColors);
+    auto xyzColors = convertRGBToXYZ(img);
+    auto labColors = convertXYZToLab(xyzColors);
     xyzColors.clear();
 
-    int sideWidth=neighbourhoodRadius*2+1;
-    int area=sideWidth*sideWidth;
+    int sideWidth = neighbourhoodRadius * 2 + 1;
+    int area = sideWidth * sideWidth;
 
-    std::vector<float> luminanceDifference(labColors.size()*area);
+    std::vector<float> luminanceDifference(labColors.size() * area);
     // a and b differences
-    std::vector<float> abDifference(labColors.size()*area);
+    std::vector<float> abDifference(labColors.size() * area);
 
     for (int y = 0; y < imgRef.height; y++)
     {
         const int yOffset = y * imgRef.width;
         for (int x = 0; x < imgRef.width; x++)
         {
-            int idx=yOffset+x;
-            const float currL=labColors[idx].L;
-            const float currA=labColors[idx].a;
-            const float currB=labColors[idx].b;
-            idx*=area;
+            int idx = yOffset + x;
+            const float currL = labColors[idx].L;
+            const float currA = labColors[idx].a;
+            const float currB = labColors[idx].b;
+            idx *= area;
 
             for (int i = -neighbourhoodRadius; i <= neighbourhoodRadius; i++)
             {
@@ -269,16 +269,16 @@ void ImageFramework::convertToGrayscaleImageEnhancedContrast(Image* img, int nei
                 if (y + i >= 0 && y + i < imgRef.height)
                 {
                     const int offset = (i + y) * imgRef.width + x;
-                    const int offset2=(i+neighbourhoodRadius)*sideWidth;
+                    const int offset2 = (i + neighbourhoodRadius) * sideWidth;
                     for (int j = -neighbourhoodRadius; j <= neighbourhoodRadius; j++)
                     {
                         if (x + j >= 0 && x + j < imgRef.width)
                         {
-                            const int idx2=idx+j+neighbourhoodRadius+offset2;
-                            luminanceDifference[idx2] = currL-labColors[offset+j].L;
-                            const float aDif=currA-labColors[offset+j].a;
-                            const float bDif=currB-labColors[offset+j].b;
-                            abDifference[idx2] = fastEuclid(aDif,bDif);
+                            const int idx2 = idx + j + neighbourhoodRadius + offset2;
+                            luminanceDifference[idx2] = currL - labColors[offset + j].L;
+                            const float aDif = currA - labColors[offset + j].a;
+                            const float bDif = currB - labColors[offset + j].b;
+                            abDifference[idx2] = fastEuclid(aDif, bDif);
                         }
                     }
                 }
@@ -286,7 +286,6 @@ void ImageFramework::convertToGrayscaleImageEnhancedContrast(Image* img, int nei
         }
     }
 }
-
 
 void ImageFramework::convertToGrayscaleImage(Image* img, bool equalWeights)
 {
@@ -299,7 +298,7 @@ void ImageFramework::convertToGrayscaleImage(Image* img, bool equalWeights)
     float gWeight = 0.72;
     float bWeight = 0.07;
 
-    if (equalWeights == true)
+    if (equalWeights)
     {
         rWeight = 0.33;
         gWeight = 0.33;
@@ -308,9 +307,9 @@ void ImageFramework::convertToGrayscaleImage(Image* img, bool equalWeights)
 
     for (int i = 0; i < imgRef.width * imgRef.height; i++)
     {
-        grayValue = (float)imgRef.imgData[i].color.red * rWeight;
-        grayValue += (float)imgRef.imgData[i].color.green * gWeight;
-        grayValue += (float)imgRef.imgData[i].color.blue * bWeight;
+        grayValue = static_cast<float>(imgRef.imgData[i].color.red) * rWeight;
+        grayValue += static_cast<float>(imgRef.imgData[i].color.green) * gWeight;
+        grayValue += static_cast<float>(imgRef.imgData[i].color.blue) * bWeight;
 
         if (grayValue >= 256)
         {
@@ -335,7 +334,7 @@ Image* ImageFramework::convolutionFilter(
     assert(img != nullptr);
     Image& imgRef = *img;
 
-    Image* output = new Image(imgRef.width, imgRef.height, 24);
+    auto output = new Image(imgRef.width, imgRef.height, 24);
     int distanceRight = filterWidth / 2;
     int distanceTop = filterHeight / 2;
     float* tmpValuesR = nullptr;
@@ -408,18 +407,21 @@ Image* ImageFramework::convolutionFilter(
                 for (int j = 0; j < filterWidth; j++)
                 {
                     newValueR += filter[currYOffset + j]
-                        * (float)imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
-                              .color.red;
+                        * static_cast<float>(
+                                     imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
+                                         .color.red);
                     newValueG += filter[currYOffset + j]
-                        * (float)imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
-                              .color.green;
+                        * static_cast<float>(
+                                     imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
+                                         .color.green);
                     newValueB += filter[currYOffset + j]
-                        * (float)imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
-                              .color.blue;
+                        * static_cast<float>(
+                                     imgRef.imgData[(x - distanceRight + j) + (y - distanceTop + i) * imgRef.width]
+                                         .color.blue);
                 }
             }
 
-            if (needsNormalization == false)
+            if (!needsNormalization)
             {
                 output->imgData[x + y * imgRef.width].color.red = newValueR;
                 output->imgData[x + y * imgRef.width].color.green = newValueG;
@@ -507,7 +509,7 @@ void ImageFramework::sub(Image* destImg, const Image* img, bool needsNormalizati
 
     for (int i = 0; i < minImgSize; i++)
     {
-        if (needsNormalization == false)
+        if (!needsNormalization)
         {
             destImgRef.imgData[i].color.red -= imgRef.imgData[i].color.red;
             destImgRef.imgData[i].color.green -= imgRef.imgData[i].color.green;
@@ -515,9 +517,12 @@ void ImageFramework::sub(Image* destImg, const Image* img, bool needsNormalizati
         }
         else
         {
-            newValueR = (float)destImgRef.imgData[i].color.red - (float)imgRef.imgData[i].color.red;
-            newValueG = (float)destImgRef.imgData[i].color.green - (float)imgRef.imgData[i].color.green;
-            newValueB = (float)destImgRef.imgData[i].color.blue - (float)imgRef.imgData[i].color.blue;
+            newValueR
+                = static_cast<float>(destImgRef.imgData[i].color.red) - static_cast<float>(imgRef.imgData[i].color.red);
+            newValueG = static_cast<float>(destImgRef.imgData[i].color.green)
+                - static_cast<float>(imgRef.imgData[i].color.green);
+            newValueB = static_cast<float>(destImgRef.imgData[i].color.blue)
+                - static_cast<float>(imgRef.imgData[i].color.blue);
 
             tmpValuesR[i] = newValueR;
             tmpValuesG[i] = newValueG;
@@ -588,7 +593,7 @@ void ImageFramework::add(Image* destImg, const Image* img, bool needsNormalizati
 
     for (int i = 0; i < minImgSize; i++)
     {
-        if (needsNormalization == false)
+        if (!needsNormalization)
         {
             destImgRef.imgData[i].color.red += imgRef.imgData[i].color.red;
             destImgRef.imgData[i].color.green += imgRef.imgData[i].color.green;
@@ -596,9 +601,12 @@ void ImageFramework::add(Image* destImg, const Image* img, bool needsNormalizati
         }
         else
         {
-            newValueR = (float)destImgRef.imgData[i].color.red + (float)imgRef.imgData[i].color.red;
-            newValueG = (float)destImgRef.imgData[i].color.green + (float)imgRef.imgData[i].color.green;
-            newValueB = (float)destImgRef.imgData[i].color.blue + (float)imgRef.imgData[i].color.blue;
+            newValueR
+                = static_cast<float>(destImgRef.imgData[i].color.red) + static_cast<float>(imgRef.imgData[i].color.red);
+            newValueG = static_cast<float>(destImgRef.imgData[i].color.green)
+                + static_cast<float>(imgRef.imgData[i].color.green);
+            newValueB = static_cast<float>(destImgRef.imgData[i].color.blue)
+                + static_cast<float>(imgRef.imgData[i].color.blue);
 
             tmpValuesR[i] = newValueR;
             tmpValuesG[i] = newValueG;
@@ -638,9 +646,9 @@ Image* ImageFramework::resizeImageNearestNeighbour(Image* img, int newWidth, int
     assert(img != nullptr);
     Image& imgRef = *img;
 
-    Image* img2 = new Image(newWidth, newHeight);
-    unsigned int xRatio = (unsigned int)((imgRef.width << 16) / newWidth) + 1;
-    unsigned int yRatio = (unsigned int)((imgRef.height << 16) / newHeight) + 1;
+    auto img2 = new Image(newWidth, newHeight);
+    unsigned int xRatio = static_cast<unsigned int>((imgRef.width << 16) / newWidth) + 1;
+    unsigned int yRatio = static_cast<unsigned int>((imgRef.height << 16) / newHeight) + 1;
 
     for (int i = 0; i < newHeight; i++)
     {
@@ -745,20 +753,20 @@ std::vector<bool> ImageFramework::adaptiveBinarization(Image* img, int radius, i
             float threshold;
             if (maxDev == 0)
             {
-                threshold = (1.0 - a1) * (float)mean[idx];
+                threshold = (1.0 - a1) * static_cast<float>(mean[idx]);
             }
             else
             {
                 const float ratio = (standardDev[idx] / maxDev);
                 const float a2 = k1 * ratio * ratio;
                 const float a3 = k2 * ratio * ratio;
-                threshold = (1.0 - a1) * (float)mean[idx] + a2 * ratio * (float)(mean[idx] - minVal[idx])
-                    + a3 * (float)minVal[idx];
+                threshold = (1.0 - a1) * static_cast<float>(mean[idx])
+                    + a2 * ratio * static_cast<float>(mean[idx] - minVal[idx]) + a3 * static_cast<float>(minVal[idx]);
             }
 
             if (threshold < imgRef.imgData[idx].color.red)
             {
-                binarized[idx] = 1;
+                binarized[idx] = true;
             }
         }
     }
@@ -771,7 +779,7 @@ Image* ImageFramework::medianFilter(Image* img, int radius)
     assert(img != nullptr);
     Image& imgRef = *img;
 
-    Image* output = new Image(imgRef.width, imgRef.height);
+    auto output = new Image(imgRef.width, imgRef.height);
     const int area = (radius * 2 + 1) * (radius * 2 + 1);
     std::vector<int> points(area);
 
