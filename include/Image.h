@@ -29,6 +29,20 @@ struct Color
     }
 };
 
+struct ColorXYZ
+{
+    float x;
+    float y;
+    float z;
+};
+
+struct CIELab
+{
+    float L;
+    float a;
+    float b;
+};
+
 struct Pixel
 {
     int x;

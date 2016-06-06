@@ -68,6 +68,8 @@ int main(int argc, char* argv[])
     }
 
     convertToGrayscaleImage(img, true);
+    // Not implemented yet, but will replace above call
+    // convertToGrayscaleImageEnhancedContrast(img,20);
 
     auto gauss1D = calculate1DGaussianKernel(gaussRadius, gaussSigma);
     Image* imgCon = convolutionFilter(img, gauss1D, 1, gaussRadius);
@@ -99,6 +101,8 @@ int main(int argc, char* argv[])
     auto diff = end - start;
 
     std::cout << "It took: " << std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
+
+    system("PAUSE");
 
     return 0;
 }

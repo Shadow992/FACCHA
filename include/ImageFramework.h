@@ -48,8 +48,7 @@ struct ImageLBP
     int highestGradientColor;
 };
 
-unsigned int isqrt(unsigned int x);
-
+#include "ColorConverter.h"
 #include "ContourDetector.h"
 #include "DistanceTransformer.h"
 #include "FeatureExtraction.h"
@@ -61,5 +60,6 @@ unsigned int isqrt(unsigned int x);
 #include "ImageStatistics.h"
 #include "IntegralImage.h"
 #include "PartTemplate.h"
+
 
 #endif // IMAGEFRAMEWORK_H

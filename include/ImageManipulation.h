@@ -3,10 +3,14 @@
 
 #include "Image.h"
 #include "ImageFramework.h"
+#include "ColorConverter.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <vector>
+
+inline float fastEuclid(float x1, float x2);
+inline unsigned int isqrt(unsigned int x);
 
 namespace ImageFramework
 {
@@ -28,6 +32,7 @@ namespace ImageFramework
     void invertImage(Image* img);
     void removeSmallRegions(std::vector<bool>& binarizedImage, int width, int height, int minSize, int radius = 1,
         bool groupingColor = false);
+    void convertToGrayscaleImageEnhancedContrast(Image* img, int neighbourhoodRadius);
 }
 
 #endif // IMAGEMANIPULATION_H

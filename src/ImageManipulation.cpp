@@ -2,6 +2,44 @@
 
 #include <cassert>
 
+float fastEuclid(float x1, float x2)
+{
+    x1=std::abs(x1);
+    x2=std::abs(x2);
+
+    if ( x1 < x2 )
+    {
+        return 0.41*x1 + 0.941246*x2;
+    }
+    return 0.41*x2 + 0.941246*x1;
+}
+
+unsigned int isqrt(unsigned int x)
+{
+    register unsigned int op, res, one;
+
+    op = x;
+    res = 0;
+
+    /* "one" starts at the highest power of four <= than the argument. */
+    one = 1 << 30; /* second-to-top bit set */
+    while (one > op)
+        one >>= 2;
+
+    while (one != 0)
+    {
+        if (op >= res + one)
+        {
+            op -= res + one;
+            res += one << 1; // <-- faster than 2 * one
+        }
+        res >>= 1;
+        one >>= 2;
+    }
+    return res;
+}
+
+
 void ImageFramework::invertImage(Image* img)
 {
     assert(img != nullptr);
@@ -197,6 +235,58 @@ void ImageFramework::erode(std::vector<bool>& binPixel, int widthBinPixel, int h
         }
     }
 }
+
+
+void ImageFramework::convertToGrayscaleImageEnhancedContrast(Image* img, int neighbourhoodRadius)
+{
+    Image& imgRef=*img;
+
+    auto xyzColors=convertRGBToXYZ(img);
+    auto labColors=convertXYZToLab(xyzColors);
+    xyzColors.clear();
+
+    int sideWidth=neighbourhoodRadius*2+1;
+    int area=sideWidth*sideWidth;
+
+    std::vector<float> luminanceDifference(labColors.size()*area);
+    // a and b differences
+    std::vector<float> abDifference(labColors.size()*area);
+
+    for (int y = 0; y < imgRef.height; y++)
+    {
+        const int yOffset = y * imgRef.width;
+        for (int x = 0; x < imgRef.width; x++)
+        {
+            int idx=yOffset+x;
+            const float currL=labColors[idx].L;
+            const float currA=labColors[idx].a;
+            const float currB=labColors[idx].b;
+            idx*=area;
+
+            for (int i = -neighbourhoodRadius; i <= neighbourhoodRadius; i++)
+            {
+
+                if (y + i >= 0 && y + i < imgRef.height)
+                {
+                    const int offset = (i + y) * imgRef.width + x;
+                    const int offset2=(i+neighbourhoodRadius)*sideWidth;
+                    for (int j = -neighbourhoodRadius; j <= neighbourhoodRadius; j++)
+                    {
+                        if (x + j >= 0 && x + j < imgRef.width)
+                        {
+                            const int idx2=idx+j+neighbourhoodRadius+offset2;
+                            luminanceDifference[idx2] = currL-labColors[offset+j].L;
+                            const float aDif=currA-labColors[offset+j].a;
+                            const float bDif=currB-labColors[offset+j].b;
+                            abDifference[idx2] = fastEuclid(aDif,bDif);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 void ImageFramework::convertToGrayscaleImage(Image* img, bool equalWeights)
 {
