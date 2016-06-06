@@ -39,9 +39,7 @@ macro(common_gcc_clang_setup)
 
 	append_cxx_flag_debug("-DDEBUG")
 
-	append_cxx_flag_release("-O3")
 	append_cxx_flag_release("-flto")
-	append_cxx_flag_release("-DNDEBUG")
 endmacro(common_gcc_clang_setup)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
