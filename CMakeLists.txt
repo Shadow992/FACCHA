@@ -20,7 +20,7 @@ function(append_cxx_flag_release flag)
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}_RELEASE ${flag}" PARENT_SCOPE)
 endfunction(append_cxx_flag_release)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+macro(common_gcc_clang_setup)
 	append_cxx_flag("-std=c++14")
 	append_cxx_flag("-march=native")
 	if(COMPILE_64BIT)
@@ -28,8 +28,21 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	else()
 		append_cxx_flag("-m32")
 	endif()
-	# Enable all warnings. We'll disable some of them later.
+	# Enable all warnings.
 	append_cxx_flag("-Wall")
+
+	append_cxx_flag_debug("-g")
+	append_cxx_flag_debug("-DDEBUG")
+
+	append_cxx_flag_release("-O3")
+	append_cxx_flag_release("-flto")
+	append_cxx_flag_release("-DNDEBUG")
+endmacro(common_gcc_clang_setup)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	common_gcc_clang_setup()
+
+	# Enable additional warnings
 	append_cxx_flag("-Weverything")
 
 	# We don't care about compatibility
@@ -37,31 +50,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	append_cxx_flag("-Wno-c++98-compat-pedantic")
 	append_cxx_flag("-Wno-global-constructors")
 	append_cxx_flag("-Wno-exit-time-destructors")
-
-	append_cxx_flag_debug("-g")
-	append_cxx_flag_debug("-DDEBUG")
-
-	append_cxx_flag_release("-O3")
-	append_cxx_flag_release("-flto")
-	append_cxx_flag_release("-DNDEBUG")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	append_cxx_flag("-std=c++14")
-	append_cxx_flag("-march=native")
-	if(COMPILE_64BIT)
-		append_cxx_flag("-m64")
-	else()
-		append_cxx_flag("-m32")
-	endif()
-	# Enable all warnings. We'll disable some of them later.
-	append_cxx_flag("-Wall")
+	common_gcc_clang_setup()
+
+	# Enable additional warnings
 	append_cxx_flag("-Wextra")
-
-	append_cxx_flag_debug("-g")
-	append_cxx_flag_debug("-DDEBUG")
-
-	append_cxx_flag_release("-O3")
-	append_cxx_flag_release("-flto")
-	append_cxx_flag_release("-DNDEBUG")
 endif()
 
 find_package(JPEG REQUIRED)
