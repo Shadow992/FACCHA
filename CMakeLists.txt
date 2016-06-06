@@ -3,6 +3,12 @@ project("FACCHA")
 
 option(COMPILE_64BIT "compile for 64bit" ON)
 
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Debug CACHE STRING
+      "Set buld type. Possible values: Debug Release RelWithDebInfo MinSizeRel"
+      FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
 # Set output directories.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
