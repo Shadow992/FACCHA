@@ -1,12 +1,13 @@
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
 #include <cassert>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <iostream>
 #include <vector>
+
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace cv;
 
