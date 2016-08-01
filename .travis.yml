@@ -9,8 +9,9 @@ compiler:
 
 before_install:
   - sudo apt-get -qq update
+  - sudo apt-get install libopencv-dev
 
-script: 'mkdir build && cd build && cmake .. && make'
+script: './debug.sh'
 
 notifications:
   email: false
