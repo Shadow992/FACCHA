@@ -1,9 +1,5 @@
 
 #include "ImageFeature.h"
-
-using namespace cv;
-using namespace std;
-
  
 unsigned int isqrt(unsigned int x)
 {
@@ -34,12 +30,22 @@ unsigned int isqrt(unsigned int x)
  
 void ImageFramework::invertImage(Mat& img)
 {
-    img.forEach<cv::Point3_<uint8_t>>([](cv::Point3_<uint8_t> &p, const int * position) -> void
+    if (img.type() == CV_8UC3)
     {
-        p.x = 255-p.x;
-        p.y = 255-p.y;
-        p.z = 255-p.z;
-    });
+        img.forEach<cv::Point3_<uint8_t>>([](cv::Point3_<uint8_t> &p, const int * position) -> void
+        {
+            p.x = 255-p.x;
+            p.y = 255-p.y;
+            p.z = 255-p.z;
+        });
+    }
+    else if (img.type() == CV_32F)
+    {
+        img.forEach<float>([](float &p, const int * position) -> void
+        {
+            p = 1.0-p;
+        });
+    }
 }
  
 void ImageFramework::removeSmallRegions(
@@ -243,10 +249,10 @@ std::vector<bool> ImageFramework::adaptiveBinarization(Mat& img, int radius, int
  
 Vec3i ImageFramework::getIntegralImageMean(Mat& integralImg, int xStart, int xEnd, int yStart, int yEnd)
 {
-    const Vec3i leftTop = integralImg.at<Vec3i>(xStart,yStart);
-    const Vec3i leftBot = integralImg.at<Vec3i>(xStart,yEnd);
-    const Vec3i rightTop = integralImg.at<Vec3i>(xEnd,yStart);
-    const Vec3i rightBot = integralImg.at<Vec3i>(xEnd,yEnd);
+    const Vec3i leftTop = integralImg.at<Vec3i>(yStart,xStart);
+    const Vec3i leftBot = integralImg.at<Vec3i>(yEnd,xStart);
+    const Vec3i rightTop = integralImg.at<Vec3i>(yStart,xEnd);
+    const Vec3i rightBot = integralImg.at<Vec3i>(yEnd,xEnd);
  
     Vec3i result;
  
@@ -270,15 +276,16 @@ Mat ImageFramework::getSaliencyMap(Mat& img, int smallWindowSize, int scaleStep,
 {
     Size imgSize = img.size();
  
-    Mat integralImg;
-    integral(img,integralImg);
- 
     const int width=imgSize.width;
     const int height=imgSize.height;
  
+    Mat integralImg;
+    integral(img,integralImg);
+    Size integralImgSize = integralImg.size();
+
     int smallerDimension=std::min(width,height);
  
-    Mat saliencyMap=Mat::zeros(width, height, CV_32F);
+    Mat saliencyMap=Mat::zeros(height,width, CV_32F);
  
     int bigImageSize;
     int halfBigWindowSize;
@@ -304,7 +311,7 @@ Mat ImageFramework::getSaliencyMap(Mat& img, int smallWindowSize, int scaleStep,
             const int yStartRandom=std::max(rand()%(height-10),0);
             const int yEndRandom=std::min(yStartRandom+bigImageSize,height-1);
  
-            const Vec3i avgValRan = getIntegralImageMean(integralImg, xEndRandom, xEndRandom, yStartRandom, yEndRandom);
+            const Vec3i avgValRan = getIntegralImageMean(integralImg, xStartRandom, xEndRandom, yStartRandom, yEndRandom);
  
             randL.push_back(avgValRan[0]);
             randa.push_back(avgValRan[1]);
