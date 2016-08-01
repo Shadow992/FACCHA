@@ -44,6 +44,7 @@ macro(common_gcc_clang_setup)
 	append_cxx_flag_debug("-DDEBUG")
 
 	append_cxx_flag_release("-flto")
+	append_cxx_flag_release("-O3")
 endmacro(common_gcc_clang_setup)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -68,11 +69,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	endif()
 endif()
 
-find_package(JPEG REQUIRED)
-find_package(PNG REQUIRED)
-find_package(ZLIB REQUIRED)
+find_package(OpenCV REQUIRED)
 
-include_directories(SYSTEM ${JPEG_INCLUDE_DIR} ${PNG_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 include_directories(include)
 
 add_subdirectory(src)
