@@ -9,18 +9,16 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace cv;
-
 inline unsigned int isqrt(unsigned int x);
 
 namespace ImageFramework
 {
-    void invertImage(Mat& img);
+    void invertImage(cv::Mat& img);
     void removeSmallRegions(
         std::vector<bool>& binarizedImage, int width, int height, int minSize, int radius, bool groupingColor);
     void fillOnePixelHoles(std::vector<bool>& binPixel);
-    std::vector<bool> adaptiveBinarization(Mat& img, int radius, int radiusSecondary);
-    Vec3i getIntegralImageMean(Mat& integralImg, int xStart, int xEnd, int yStart, int yEnd);
-    Mat getSaliencyMap(
-        Mat& img, int smallWindowSize, int scaleStep, int startingScale, int endingScale, int randomOtherRegions);
+    std::vector<bool> adaptiveBinarization(cv::Mat& img, int radius, int radiusSecondary);
+    cv::Vec3i getIntegralImageMean(cv::Mat& integralImg, int xStart, int xEnd, int yStart, int yEnd);
+    cv::Mat getSaliencyMap(
+        cv::Mat& img, int smallWindowSize, int scaleStep, int startingScale, int endingScale, int randomOtherRegions);
 }
