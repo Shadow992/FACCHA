@@ -1,6 +1,11 @@
 
 #include <faccha/ImageFeature.h>
 
+using cv::Mat;
+using cv::Point_;
+using cv::Size;
+using cv::Vec3i;
+
 unsigned int isqrt(unsigned int x)
 {
     register unsigned int op, res, one;
