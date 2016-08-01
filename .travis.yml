@@ -9,7 +9,7 @@ compiler:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install libopencv-dev
+  - sudo apt-get install -y libopencv-dev
 
 script: './debug.sh'
 
