@@ -14,6 +14,4 @@ If you are using Linux you have to recompile it, however there is an (untested) 
 
 
 ### Required Libs:
-- libJPEG
-- libPNG
-- libZLib (only used for libPNG)
+- OpenCV
